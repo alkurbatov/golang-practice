@@ -28,6 +28,9 @@
 - [Основы Go](https://practicum.yandex.ru/go-basics/) - бесплатный курс от `Yandex`
   (~30 часов).
 
+- [Conventional comments](https://conventionalcomments.org/) - ключевые слова,
+   уточняющие тип и характер комментарии на ревью кода. Для ясности :)
+
 [awesome-go]: https://github.com/avelino/awesome-go
 [clean-architecture]: https://www.chitai-gorod.ru/product/chistyy-kod-sozdanie-analiz-i-refaktoring-2231825
 [clean-code]: https://www.chitai-gorod.ru/product/chistaya-arhitektura-iskusstvo-razrabotki-programmnogo-obespecheniya-2640391
