@@ -34,3 +34,11 @@
 [awesome-go]: https://github.com/avelino/awesome-go
 [clean-architecture]: https://www.chitai-gorod.ru/product/chistyy-kod-sozdanie-analiz-i-refaktoring-2231825
 [clean-code]: https://www.chitai-gorod.ru/product/chistaya-arhitektura-iskusstvo-razrabotki-programmnogo-obespecheniya-2640391
+
+## Решение проблем с Docker
+
+В связи блокировкой российских IP-адресов со стороны `Docker` необходимо
+использовать `VPN` или один из следующих `proxy`:
+
+- [timeweb.cloud](https://dockerhub.timeweb.cloud/)
+- [huecker](https://huecker.io/)
