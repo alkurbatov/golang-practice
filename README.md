@@ -36,6 +36,13 @@
 [clean-architecture]: https://www.chitai-gorod.ru/product/chistyy-kod-sozdanie-analiz-i-refaktoring-2231825
 [clean-code]: https://www.chitai-gorod.ru/product/chistaya-arhitektura-iskusstvo-razrabotki-programmnogo-obespecheniya-2640391
 
+## Консультации
+
+Этот курс бесплатен и находится открытом доступе, но для более полного изучения
+языка и ревью предлагаемых решений вам понадобится ментор. Запросить консультацию
+у автора этого курса можно через платформу
+[GetMentor.dev](https://getmentor.dev/mentor/aleksandr-kurbatov-3515)
+
 ## Решение проблем с Docker
 
 В связи с блокировкой российских IP-адресов со стороны `Docker` необходимо
