@@ -22,6 +22,9 @@
 - [Awesome Go][awesome-go] - хороший список библиотек и проектов по Go. Подойдет
   для быстрого поиска популярной реализации инструментов для решения задачи.
 
+- [100 ошибок Go и как их избежать][100-go-errors] - подробное описание самых
+  популярных ошибок при написании программ на языке `Go`.
+
 - [Чистый код, Роберт Мартин][clean-code] - классическая и горячо обсуждаемая
   книга о написании хорошего и поддерживаемого кода.
 
@@ -35,6 +38,7 @@
 [awesome-go]: https://github.com/avelino/awesome-go
 [clean-architecture]: https://www.chitai-gorod.ru/product/chistyy-kod-sozdanie-analiz-i-refaktoring-2231825
 [clean-code]: https://www.chitai-gorod.ru/product/chistaya-arhitektura-iskusstvo-razrabotki-programmnogo-obespecheniya-2640391
+[100-go-errors]: https://www.chitai-gorod.ru/product/100-oshibok-go-i-kak-ih-izbezhat-3004794
 
 ## Консультации
 
