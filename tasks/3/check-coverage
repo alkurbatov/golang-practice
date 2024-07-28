@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#
+# Usage:
+# go test -v -coverprofile=coverage.out
+# ./check-coverage coverage.out 80
+
+set -eo pipefail
+
+PROFILE=${1}
+if [ -z "${PROFILE}" ]; then
+    echo "Path to profile file is required!"
+    exit 1
+fi
+
+THRESHOLD=${2}
+if [ -z "${THRESHOLD}" ]; then
+    echo "Coverage threshold is not set!"
+    exit 1
+fi
+
+COVERAGE=$(go tool cover -func="$PROFILE" | grep total | awk '{print substr($3, 1, length($3) - 1)}')
+echo "$COVERAGE $THRESHOLD" | LC_ALL=C awk '{if (!($1 >= $2)) { print "Coverage: " $1 "%" ", Expected threshold: " $2 "%"; exit 1 } }'
