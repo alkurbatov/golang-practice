@@ -39,6 +39,9 @@
 - [100 ошибок Go и как их избежать][100-go-errors] - подробное описание самых
   популярных ошибок при написании программ на языке `Go`.
 
+- [Practical Go][practical-go] - книга содержит множество полезных советов,
+  рекомендаций и практик по написанию поддерживаемого кода на `Go`.
+
 - [Go101][go-101] - набор онлайн книг по `Go` на разные темы.
 
 - [Чистый код, Роберт Мартин][clean-code] - классическая и горячо обсуждаемая
@@ -53,6 +56,7 @@
 [clean-code]: https://www.chitai-gorod.ru/product/chistaya-arhitektura-iskusstvo-razrabotki-programmnogo-obespecheniya-2640391
 [100-go-errors]: https://www.chitai-gorod.ru/product/100-oshibok-go-i-kak-ih-izbezhat-3004794
 [go-101]: https://go101.org/
+[practical-go]: https://dave.cheney.net/practical-go/presentations/qcon-china.html
 
 ## Решение проблем с Docker
 
