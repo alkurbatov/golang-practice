@@ -16,6 +16,8 @@
 - [Задание 3 (Контроль качества кода)](./tasks/3/3.md)
 - [Задание 4 (Конфигурирование и сохранение состояния)](./tasks/4.md)
 - [Задание 5 (Логирование)](./tasks/5.md)
+- [...]()
+- [Заключение](./tasks/99.md)
 
 ## Консультации
 
@@ -30,33 +32,6 @@
 (например, критичность дефекта, необходимость доработки, стилистические
 особенности) используются ключевые слова из списка
 [Conventional comments](https://conventionalcomments.org/).
-
-## Материалы для углубленного изучения
-
-- [Awesome Go][awesome-go] - хороший список библиотек и проектов по Go. Подойдет
-  для быстрого поиска популярной реализации инструментов для решения задачи.
-
-- [100 ошибок Go и как их избежать][100-go-errors] - подробное описание самых
-  популярных ошибок при написании программ на языке `Go`.
-
-- [Practical Go][practical-go] - книга содержит множество полезных советов,
-  рекомендаций и практик по написанию поддерживаемого кода на `Go`.
-
-- [Go101][go-101] - набор онлайн книг по `Go` на разные темы.
-
-- [Чистый код, Роберт Мартин][clean-code] - классическая и горячо обсуждаемая
-  книга о написании хорошего и поддерживаемого кода.
-
-- [Чистая архитектура, Роберт Мартин][clean-architecture] - книга описывает как
-  строить архитектуру приложения для достижения наибольшей гибкости и упрощения
-  внесения изменений.
-
-[awesome-go]: https://github.com/avelino/awesome-go
-[clean-architecture]: https://www.chitai-gorod.ru/product/chistyy-kod-sozdanie-analiz-i-refaktoring-2231825
-[clean-code]: https://www.chitai-gorod.ru/product/chistaya-arhitektura-iskusstvo-razrabotki-programmnogo-obespecheniya-2640391
-[100-go-errors]: https://www.chitai-gorod.ru/product/100-oshibok-go-i-kak-ih-izbezhat-3004794
-[go-101]: https://go101.org/
-[practical-go]: https://dave.cheney.net/practical-go/presentations/qcon-china.html
 
 ## Решение проблем с Docker
 
