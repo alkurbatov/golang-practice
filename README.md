@@ -1,5 +1,7 @@
 # golang-practice
 
+[![CC BY-NC 4.0][cc-by-nc-shield]][cc-by-nc]
+
 Набор практических заданий для изучения языка `Go`.
 В рамках цикла заданий обучающийся создаст свой сервис для управления
 личной книжной библиотекой.
@@ -42,3 +44,6 @@
 
 - [timeweb.cloud](https://dockerhub.timeweb.cloud/)
 - [huecker](https://huecker.io/)
+
+[cc-by-nc]: https://creativecommons.org/licenses/by-nc/4.0/
+[cc-by-nc-shield]: https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg
