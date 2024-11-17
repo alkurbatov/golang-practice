@@ -114,14 +114,14 @@ linters-settings:
       rangeExprCopy:
         # Size in bytes that makes the warning trigger.
         # Default: 512
-        sizeThreshold: 516
+        sizeThreshold: 512
         # Whether to check test functions.
         # Default: true
         skipTestFuncs: false
       rangeValCopy:
         # Size in bytes that makes the warning trigger.
         # Default: 128
-        sizeThreshold: 32
+        sizeThreshold: 128
         # Whether to check test functions.
         # Default: true
         skipTestFuncs: false
@@ -301,10 +301,9 @@ linters:
     - contextcheck
     - depguard
     - dupl
-    - execinquery
     - exhaustruct
+    - exportloopref
     - forcetypeassert
-    - gomnd
     - gomoddirectives
     - maintidx
     - mnd
