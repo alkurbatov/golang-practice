@@ -202,7 +202,11 @@ linters-settings:
     min-confidence: 0.8
 
   govet:
-    enable: []
+    enable:
+      - shadow
+    settings:
+      shadow:
+        strict: true
 
   lll:
     # Max line length, lines longer will be reported.
