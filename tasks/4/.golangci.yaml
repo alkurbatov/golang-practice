@@ -1,389 +1,531 @@
+# Defines the configuration version.
+# The only possible value is "2".
+version: "2"
+
 # Options for analysis running.
 run:
-  # Timeout for analysis, e.g. 30s, 5m.
-  # Default: 1m
+  # Number of operating system threads (`GOMAXPROCS`) that can execute golangci-lint simultaneously.
+  # Default: 0 (automatically set to match Linux container CPU quota and
+  # fall back to the number of logical CPUs in the machine).
+  concurrency: 4
+
+  # Timeout for total work, e.g. 30s, 5m, 5m30s.
+  # If the value is lower or equal to 0, the timeout is disabled.
+  # Default: 1m.
   timeout: 5m
 
-  # Exit code when at least one issue was found, default is 1.
-  issues-exit-code: 1
+  # List of build tags, all linters use it.
+  # Default: [].
+  build-tags:
+    - test
+    - debug
 
-  # Include test files or not, default is true.
-  tests: true
-
-  # List of build tags, all linters use it. Default is empty list.
-  # build-tags:
-  #   - mytag
-
-# Output configuration options.
-output:
-  # The formats used to render issues.
-  # Format: `colored-line-number`, `line-number`, `json`, `colored-tab`, `tab`, `checkstyle`, `code-climate`, `junit-xml`, `github-actions`, `teamcity`
-  # Output path can be either `stdout`, `stderr` or path to the file to write to.
+  # If set, we pass it to "go list -mod={option}". From "go help modules":
+  # If invoked with -mod=readonly, the go command is disallowed from the implicit
+  # automatic updating of go.mod described above. Instead, it fails when any changes
+  # to go.mod are needed. This setting is most useful to check that go.mod does
+  # not need updates, such as in a continuous integration and testing system.
+  # If invoked with -mod=vendor, the go command assumes that the vendor
+  # directory holds the correct copies of dependencies and ignores
+  # the dependency descriptions in go.mod.
   #
-  # For the CLI flag (`--out-format`), multiple formats can be specified by separating them by comma.
-  # The output can be specified for each of them by separating format name and path by colon symbol.
-  # Example: "--out-format=checkstyle:report.xml,json:stdout,colored-line-number"
-  # The CLI flag (`--out-format`) override the configuration file.
-  formats:
-    - format: colored-line-number
-      path: stdout
+  # Allowed values: readonly|vendor|mod
+  # Default: ""
+  modules-download-mode: readonly
 
-  # Print lines of code with issue, default is true.
-  print-issued-lines: true
+  # Allow multiple parallel golangci-lint instances running.
+  # If false, golangci-lint acquires file lock on start.
+  # Default: false
+  allow-parallel-runners: true
 
-  # Print linter name in the end of issue text, default is true.
-  print-linter-name: true
-
-# All available settings of specific linters.
-# See: https://golangci-lint.run/usage/linters/#linters-configuration
-linters-settings:
-  errorlint:
-    # Check whether fmt.Errorf uses the %w verb for formatting errors.
-    # See the https://github.com/polyfloyd/go-errorlint for caveats.
-    # Default: true
-    errorf: true
-    # Check for plain error comparisons.
-    # Disabled in favor of goerr113.
-    # Default: true
-    comparison: false
-
-  errcheck:
-    # Report about not checking of errors in types assertions: `a := b.(MyStruct)`;
-    # default is false: such cases aren't reported by default.
-    check-type-assertions: true
-    # Report about assignment of errors to blank identifier: `num, _ := strconv.Atoi(numStr)`;
-    # default is false: such cases aren't reported by default.
-    check-blank: true
-
-  exhaustive:
-    # Check switch statements in generated files also.
-    # Default: false
-    check-generated: false
-    # Presence of "default" case in switch statements satisfies exhaustiveness,
-    # even if all enum members are not listed.
-    # Default: false
-    default-signifies-exhaustive: false
-
-  funlen:
-    lines: 65
-    statements: 40
-
-  gci:
-    sections:
-      - standard                                    # Standard section: captures all standard packages.
-      - default                                     # Default section: contains all imports that could not be matched to another section type.
-      - prefix(github.com)                          # Local sources and other things from github.com
-    skip-generated: true
-    custom-order: true    # Put sections in the order specified in the config.
-
-  gocritic:
-    disabled-checks:
-      - whyNoLint # https://github.com/go-critic/go-critic/issues/1063
-      - importShadow
-      - sloppyReassign
-    # Enable multiple checks by tags, run `GL_DEBUG=gocritic golangci-lint run` to see all tags and checks.
-    # See https://github.com/go-critic/go-critic#usage -> section "Tags".
-    # Default: []
-    enabled-tags:
-      - diagnostic
-      - experimental
-      - opinionated
-      - performance
-      - style
-    # Settings passed to gocritic.
-    # The settings key is the name of a supported gocritic checker.
-    # The list of supported checkers can be find in https://go-critic.github.io/overview.
-    settings:
-      # Must be valid enabled check name.
-      captLocal:
-        # Whether to restrict checker to params only.
-        # Default: true
-        paramsOnly: false
-      elseif:
-        # Whether to skip balanced if-else pairs.
-        # Default: true
-        skipBalanced: false
-      hugeParam:
-        # Size in bytes that makes the warning trigger.
-        # Default: 80
-        sizeThreshold: 70
-      nestingReduce:
-        # Min number of statements inside a branch to trigger a warning.
-        # Default: 5
-        bodyWidth: 4
-      rangeExprCopy:
-        # Size in bytes that makes the warning trigger.
-        # Default: 512
-        sizeThreshold: 512
-        # Whether to check test functions.
-        # Default: true
-        skipTestFuncs: false
-      rangeValCopy:
-        # Size in bytes that makes the warning trigger.
-        # Default: 128
-        sizeThreshold: 128
-        # Whether to check test functions.
-        # Default: true
-        skipTestFuncs: false
-      ruleguard:
-        # Enable debug to identify which 'Where' condition was rejected.
-        # The value of the parameter is the name of a function in a ruleguard file.
-        #
-        # When a rule is evaluated:
-        # If:
-        #   The Match() clause is accepted; and
-        #   One of the conditions in the Where() clause is rejected,
-        # Then:
-        #   ruleguard prints the specific Where() condition that was rejected.
-        #
-        # The flag is passed to the ruleguard 'debug-group' argument.
-        # Default: ""
-        debug: 'emptyDecl'
-        # Deprecated, use 'failOn' param.
-        # If set to true, identical to failOn='all', otherwise failOn=''
-        failOnError: false
-        # Determines the behavior when an error occurs while parsing ruleguard files.
-        # If flag is not set, log error and skip rule files that contain an error.
-        # If flag is set, the value must be a comma-separated list of error conditions.
-        # - 'all':    fail on all errors.
-        # - 'import': ruleguard rule imports a package that cannot be found.
-        # - 'dsl':    gorule file does not comply with the ruleguard DSL.
-        # Default: ""
-        failOn: dsl
-      tooManyResultsChecker:
-        # Maximum number of results.
-        # Default: 5
-        maxResults: 10
-      truncateCmp:
-        # Whether to skip int/uint/uintptr types.
-        # Default: true
-        skipArchDependent: false
-      underef:
-        # Whether to skip (*x).method() calls where x is a pointer receiver.
-        # Default: true
-        skipRecvDeref: false
-      unnamedResult:
-        # Whether to check exported functions.
-        # Default: false
-        checkExported: true
-
-  gocognit:
-    # Minimal code complexity to report.
-    # Default: 30 (but we recommend 10-20)
-    min-complexity: 20
-
-  goconst:
-    # Minimal length of string constant.
-    # Default: 3
-    min-len: 2
-    # Minimum occurrences of constant string count to trigger issue.
-    # Default: 3
-    min-occurrences: 2
-    # Ignore test files.
-    # Default: false
-    ignore-tests: true
-
-  godox:
-    # Report any comments starting with keywords, this is useful for TODO or FIXME comments that
-    # might be left in the code accidentally and should be resolved before merging.
-    # Default: ["TODO", "BUG", "FIXME"]
-    keywords:
-      - FIXME
-
-  gofmt:
-    # Simplify code: gofmt with `-s` option, true by default.
-    simplify: true
-
-  gofumpt:
-    extra-rules: true
-
-  golint:
-    # Minimal confidence for issues, default is 0.8.
-    min-confidence: 0.8
-
-  govet:
-    enable:
-      - shadow
-    settings:
-      shadow:
-        strict: true
-
-  lll:
-    # Max line length, lines longer will be reported.
-    # '\t' is counted as 1 character by default, and can be changed with the tab-width option.
-    # Default: 120.
-    line-length: 100
-
-  misspell:
-    # Correct spellings using locale preferences for US or UK.
-    # Default is to use a neutral variety of English.
-    # Setting locale to US will correct the British spelling of 'colour' to 'color'.
-    locale: US
-
-  nestif:
-    # Minimal complexity of if statements to report.
-    # Default: 5
-    min-complexity: 4
-
-  nolintlint:
-    # Enable to require an explanation of nonzero length after each nolint directive.
-    # Default: false
-    require-explanation: true
-    # Enable to require nolint directives to mention the specific linter being suppressed.
-    # Default: false
-    require-specific: true
-
-  revive:
-    rules:
-      - name: blank-imports
-      - name: context-as-argument
-      - name: context-keys-type
-      - name: dot-imports
-      - name: error-return
-      - name: error-strings
-      - name: error-naming
-      - name: exported
-      - name: if-return
-      - name: increment-decrement
-      - name: var-naming
-      - name: var-declaration
-      - name: package-comments
-      - name: range
-      - name: receiver-naming
-      - name: time-naming
-      - name: indent-error-flow
-      - name: errorf
-      - name: empty-block
-      - name: superfluous-else
-      - name: unreachable-code
-
-  sloglint:
-    # Enforce not mixing key-value pairs and attributes.
-    # Default: true
-    no-mixed-args: true
-    # Enforce using key-value pairs only (overrides no-mixed-args, incompatible with attr-only).
-    # Default: false
-    kv-only: false
-    # Enforce using attributes only (overrides no-mixed-args, incompatible with kv-only).
-    # Default: false
-    attr-only: false
-    # Enforce not using global loggers.
-    # Values:
-    # - "": disabled
-    # - "all": report all global loggers
-    # - "default": report only the default slog logger
-    # Default: ""
-    no-global: "all"
-    # Enforce using methods that accept a context.
-    # Default: false
-    context: "scope"
-    # Enforce using static values for log messages.
-    # Default: false
-    static-msg: false
-    # Enforce using constants instead of raw keys.
-    # Default: false
-    no-raw-keys: false
-    # Enforce a single key naming convention.
-    # Values: snake, kebab, camel, pascal
-    # Default: ""
-    key-naming-case: snake
-    # Enforce putting arguments on separate lines.
-    # Default: false
-    args-on-sep-lines: false
-
-  unparam:
-    # Inspect exported functions, default is false. Set to true if no external program/library imports your code.
-    # XXX: if you enable this setting, unparam will report a lot of false-positives in text editors:
-    # if it's called for subdir of a project it can't find external interfaces. All text editor integrations
-    # with golangci-lint call it on a directory with the changed file.
-    check-exported: false
+output:
+  # Order to use when sorting results.
+  # Possible values: `file`, `linter`, and `severity`.
+  #
+  # If the severity values are inside the following list, they are ordered in this order:
+  #   1. error
+  #   2. warning
+  #   3. high
+  #   4. medium
+  #   5. low
+  # Either they are sorted alphabetically.
+  #
+  # Default: ["linter", "file"]
+  sort-order:
+    - file # filepath, line, and column.
+    - severity
+    - linter
 
 linters:
-  enable-all: true
+  # Default set of linters.
+  # The value can be:
+  # - `standard`: https://golangci-lint.run/docs/linters/#enabled-by-default
+  # - `all`: enables all linters by default.
+  # - `none`: disables all linters by default.
+  # - `fast`: enables only linters considered as "fast" (`golangci-lint help linters --json | jq '[ .[] | select(.fast==true) ] | map(.name)'`).
+  # Default: standard
+  default: all
+
+  # Disable specific linters.
   disable:
-    - containedctx
-    - contextcheck
-    - depguard
-    - dupl
-    - exhaustruct
-    - exportloopref
-    - forcetypeassert
-    - gomoddirectives
-    - maintidx
-    - mnd
-    - nlreturn
-    - nonamedreturns
-    - paralleltest
-    - testableexamples
-    - varnamelen
-    - wrapcheck
-    - wsl
-    - zerologlint
+    - arangolint # opinionated best practices for arangodb client.
+    - containedctx # detects struct contained context.Context field.
+    - contextcheck # [too many false positives] checks the function whether use a non-inherited context.
+    - dupl # tool for code clone detection.
+    - exhaustive # checks exhaustiveness of enum switch statements.
+    - exhaustruct # [highly recommend to enable] checks if all structure fields are initialized.
+    - forbidigo # forbids identifiers.
+    - forcetypeassert # [replaced by errcheck] finds forced type assertions.
+    - gochecknoglobals # checks that no global variables exist.
+    - gomoddirectives # manages the use of 'replace', 'retract', and 'excludes' directives in go.mod.
+    - gomodguard # [use more powerful depguard] allow and block lists linter for direct Go module dependencies
+    - lll # [replaced by golines] reports long lines.
+    - maintidx # measures the maintainability index of each function.
+    - mnd # detects magic numbers.
+    - nlreturn # [too strict and mostly code is not more readable] checks for a new line before return and branch statements to increase code clarity.
+    - noinlineerr # disallows inline error handling `if err := ...; err != nil {`
+    - nonamedreturns # reports all named returns.
+    - paralleltest # [too many false positives] detects missing usage of t.Parallel() method in your Go test.
+    - sqlclosecheck # checks that sql.Rows, sql.Stmt, sqlx.NamedStmt, pgx.Query are closed.
+    - sloglint # ensure consistent code style when using log/slog.
+    - testableexamples # checks if examples are testable (have an expected output).
+    - testpackage # makes you use a separate _test package.
+    - varnamelen # [great idea, but too many false positives] checks that the length of a variable's name matches its scope.
+    - wrapcheck # checks that errors returned from external packages are wrapped.
+    - wsl # [too strict and mostly code is not more readable] whitespace linter forces you to use empty lines
+    - zerologlint # detects the wrong usage of zerolog that a user forgets to dispatch zerolog.Event.
+
+  # All available settings of specific linters.
+  settings:
+    cyclop:
+      # The maximal code complexity to report.
+      # Default: 10.
+      max-complexity: 10
+
+      # The maximal average package complexity.
+      # If it's higher than 0.0 (float) the check is enabled.
+      # Default: 0.0.
+      package-average: 10
+
+    depguard:
+      # Rules to apply.
+      #
+      # Variables:
+      # - File Variables
+      #   Use an exclamation mark `!` to negate a variable.
+      #   Example: `!$test` matches any file that is not a go test file.
+      #
+      #   `$all` - matches all go files.
+      #   `$test` - matches all go test files.
+      #
+      # - Package Variables
+      #
+      #   `$gostd` - matches all of go's standard library (Pulled from `GOROOT`).
+      #
+      # Default (applies if no custom rules are defined): Only allow $gostd in all files.
+      rules:
+        # Name of a rule.
+        "deprecated":
+          # List of file globs that will match this list of settings to compare against.
+          # By default, if a path is relative, it is relative to the directory where the golangci-lint command is executed.
+          # The placeholder '${base-path}' is substituted with a path relative to the mode defined with `run.relative-path-mode`.
+          # The placeholder '${config-path}' is substituted with a path relative to the configuration file.
+          # Default: $all
+          files:
+            - "$all"
+          # List of packages that are not allowed.
+          # Entries can be a variable (starting with $), a string prefix, or an exact match (if ending with $).
+          # Default: []
+          deny:
+            - pkg: github.com/golang/protobuf
+              desc: Use google.golang.org/protobuf instead, see https://developers.google.com/protocol-buffers/docs/reference/go/faq#modules
+            - pkg: github.com/satori/go.uuid
+              desc: Use github.com/google/uuid instead, satori's package is not maintained
+            - pkg: github.com/gofrs/uuid$
+              desc: Use github.com/gofrs/uuid/v5 or later, it was not a go module before v5
+            - pkg: github.com/pkg/errors
+              desc: Use "errors" instead, pkg/errors is not maintained
+        "non-test files":
+          files:
+            - "!$test"
+          deny:
+            - pkg: math/rand$
+              desc: Use math/rand/v2 instead, see https://go.dev/blog/randv2
+        "non-main files":
+          files:
+            - "!**/main.go"
+          deny:
+            - pkg: log$
+              desc: Use log/slog instead, see https://go.dev/blog/slog
+
+    embeddedstructfieldcheck:
+      # Checks that sync.Mutex and sync.RWMutex are not used as embedded fields.
+      # Default: false
+      forbid-mutex: true
+
+    errcheck:
+      # Report about not checking of errors in type assertions: `a := b.(MyStruct)`.
+      # Such cases aren't reported by default.
+      # Default: false.
+      check-type-assertions: true
+
+      # Report about assignment of errors to blank identifier: `num, _ := strconv.Atoi(numStr)`.
+      # Such cases aren't reported by default.
+      # Default: false.
+      check-blank: true
+
+    errorlint:
+      # Check for plain error comparisons.
+      # Default: true.
+      comparison: false
+
+    funlen:
+      # Checks the number of lines in a function.
+      # If lower than 0, disable the check.
+      # Default: 60.
+      lines: 80
+
+    gocognit:
+      # Minimal code complexity to report.
+      # Default: 30 (but we recommend 10-20).
+      min-complexity: 25
+
+    goconst:
+      # Minimal length of string constant.
+      # Default: 3.
+      min-len: 2
+
+      # Minimum occurrences of constant string count to trigger issue.
+      # Default: 3.
+      min-occurrences: 2
+
+    gocritic:
+      # Which checks should be disabled; can't be combined with 'enabled-checks'.
+      # Default: [].
+      disabled-checks:
+        - whyNoLint
+        - importShadow
+        - sloppyReassign
+
+      # Enable multiple checks by tags in addition to default checks.
+      # Run `GL_DEBUG=gocritic golangci-lint run --enable=gocritic` to see all tags and checks.
+      # See https://github.com/go-critic/go-critic#usage -> section "Tags".
+      # Default: [].
+      enabled-tags:
+        - diagnostic
+        - experimental
+        - opinionated
+        - performance
+        - style
+
+      # Settings passed to gocritic.
+      # The settings key is the name of a supported gocritic checker.
+      # The list of supported checkers can be found at https://go-critic.com/overview.
+      settings:
+        # Must be valid enabled check name.
+        captLocal:
+          # Whether to restrict checker to params only.
+          # Default: true.
+          paramsOnly: false
+        elseif:
+          # Whether to skip balanced if-else pairs.
+          # Default: true.
+          skipBalanced: false
+        hugeParam:
+          # Size in bytes that makes the warning trigger.
+          # Default: 80.
+          sizeThreshold: 70
+        nestingReduce:
+          # Min number of statements inside a branch to trigger a warning.
+          # Default: 5.
+          bodyWidth: 4
+        rangeExprCopy:
+          # Size in bytes that makes the warning trigger.
+          # Default: 512.
+          sizeThreshold: 512
+          # Whether to check test functions.
+          # Default: true.
+          skipTestFuncs: false
+        rangeValCopy:
+          # Size in bytes that makes the warning trigger.
+          # Default: 128.
+          sizeThreshold: 128
+          # Whether to check test functions.
+          # Default: true.
+          skipTestFuncs: false
+        tooManyResultsChecker:
+          # Maximum number of results.
+          # Default: 5.
+          maxResults: 10
+        truncateCmp:
+          # Whether to skip int/uint/uintptr types.
+          # Default: true.
+          skipArchDependent: false
+        underef:
+          # Whether to skip (*x).method() calls where x is a pointer receiver.
+          # Default: true.
+          skipRecvDeref: false
+        unnamedResult:
+          # Whether to check exported functions.
+          # Default: false.
+          checkExported: true
+
+    godoclint:
+      # List of rules to enable in addition to the default set.
+      # Default: empty
+      enable:
+        # Check proper package-level godoc, if any.
+        # https://github.com/godoc-lint/godoc-lint?tab=readme-ov-file#pkg-doc
+        - pkg-doc
+        # Require all packages to have a godoc.
+        # https://github.com/godoc-lint/godoc-lint?tab=readme-ov-file#require-pkg-doc
+        - require-pkg-doc
+        # Assert correct formatting of deprecation notes.
+        # https://github.com/godoc-lint/godoc-lint?tab=readme-ov-file#deprecated
+        - deprecated
+        # Assert no unused link in godocs.
+        # https://github.com/godoc-lint/godoc-lint?tab=readme-ov-file#no-unused-link
+        - no-unused-link
+      # List of rules to disable.
+      # Default: empty.
+      disable:
+        # Assert at most one godoc per package.
+        # https://github.com/godoc-lint/godoc-lint?tab=readme-ov-file#single-pkg-doc
+        - single-pkg-doc
+
+    godox:
+      # Report any comments starting with keywords, this is useful for TODO or FIXME comments that
+      # might be left in the code accidentally and should be resolved before merging.
+      # Default: ["TODO", "BUG", "FIXME"].
+      keywords:
+        - FIXME
+
+    govet:
+      # Enable analyzers by name.
+      # (In addition to default:
+      #   appends, asmdecl, assign, atomic, bools, buildtag, cgocall, composites, copylocks, defers, directive, errorsas,
+      #   framepointer, httpresponse, ifaceassert, loopclosure, lostcancel, nilfunc, printf, shift, sigchanyzer, slog,
+      #   stdmethods, stringintconv, structtag, testinggoroutine, tests, timeformat, unmarshal, unreachable, unsafeptr,
+      #   unusedresult
+      # ).
+      # Run `GL_DEBUG=govet golangci-lint run --enable=govet` to see default, all available analyzers, and enabled analyzers.
+      # Default: [].
+      enable:
+        # Check for possible unintended shadowing of variables.
+        - shadow
+
+      # Settings per analyzer.
+      settings:
+        # Analyzer name, run `go tool vet help` to see all analyzers.
+        shadow:
+          # Whether to be strict about shadowing; can be noisy.
+          # Default: false.
+          strict: true
+
+    importas:
+      # Do not allow unaliased imports of aliased packages.
+      # Default: false.
+      no-unaliased: true
+      # List of aliases.
+      # Default: [].
+      alias: []
+
+    ireturn:
+      # List of interfaces to allow.
+      # Lists of the keywords and regular expressions matched to interface or package names can be used.
+      # `allow` and `reject` settings cannot be used at the same time.
+      #
+      # Keywords:
+      # - `empty` for `interface{}`
+      # - `error` for errors
+      # - `stdlib` for standard library
+      # - `anon` for anonymous interfaces
+      # - `generic` for generic interfaces added in go 1.18
+      #
+      # Default: [anon, error, empty, stdlib].
+      allow:
+        - anon
+        - empty
+        - error
+        - grpc.ServerOption
+        - proto.Message
+        - stdlib
+        - (Client)$
+        - (Factory)$
+        - (Service)$
+        - (or|er)$
+
+    misspell:
+      # Correct spellings using locale preferences for US or UK.
+      # Setting locale to US will correct the British spelling of 'colour' to 'color'.
+      # Default is to use a neutral variety of English.
+      locale: US
+
+    nestif:
+      # Minimal complexity of if statements to report.
+      # Default: 5.
+      min-complexity: 4
+
+    nolintlint:
+      # Exclude following linters from requiring an explanation.
+      # Default: [].
+      allow-no-explanation:
+        - funlen
+        - gocognit
+        - golines
+      # Enable to require an explanation of nonzero length after each nolint directive.
+      # Default: false.
+      require-explanation: true
+      # Enable to require nolint directives to mention the specific linter being suppressed.
+      # Default: false.
+      require-specific: true
+
+    revive:
+      rules:
+        # https://github.com/mgechev/revive/blob/HEAD/RULES_DESCRIPTIONS.md#add-constant.
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: empty-block
+        - name: error-naming
+        - name: error-return
+        - name: error-strings
+        - name: errorf
+        - name: exported
+        - name: if-return
+        - name: increment-decrement
+        - name: indent-error-flow
+        - name: package-comments
+        - name: range
+        - name: receiver-naming
+        - name: superfluous-else
+        - name: time-naming
+        - name: unreachable-code
+        - name: var-declaration
+        - name: var-naming
+
+    tagliatelle:
+      # Checks the struct tag name case.
+      case:
+        # Defines the association between tag name and case.
+        # Any struct tag name can be used.
+        # Supported string cases:
+        # - `camel`
+        # - `pascal`
+        # - `kebab`
+        # - `snake`
+        # - `upperSnake`
+        # - `goCamel`
+        # - `goPascal`
+        # - `goKebab`
+        # - `goSnake`
+        # - `upper`
+        # - `lower`
+        # - `header`
+        rules:
+          bson: snake
+          json: snake
+          mapstructure: snake
+          toml: snake
+          xml: snake
+          yaml: snake
+
+  # Defines a set of rules to ignore issues.
+  # It does not skip the analysis, and so does not ignore "typecheck" errors.
+  exclusions:
+    # Mode of the generated files analysis.
+    #
+    # - `strict`: sources are excluded by strictly following the Go generated file convention.
+    #    Source files that have lines matching only the following regular expression will be excluded: `^// Code generated .* DO NOT EDIT\.$`
+    #    This line must appear before the first non-comment, non-blank text in the file.
+    #    https://go.dev/s/generatedcode
+    # - `lax`: sources are excluded if they contain lines like `autogenerated file`, `code generated`, `do not edit`, etc.
+    # - `disable`: disable the generated files exclusion.
+    #
+    # Default: strict.
+    generated: lax
+
+    # Predefined exclusion rules.
+    # Default: [].
+    presets:
+      - comments
+      - common-false-positives
+      - std-error-handling
+
+    # Excluding configuration per-path, per-linter, per-text and per-source.
+    rules:
+      # Exclude some linters from running on tests files.
+      - linters:
+          - cyclop
+          - funlen
+          - gocritic
+          - gosec
+          - noctx
+          - unparam
+          - unused
+        path: _test\.go
+
+      # Exclude godoclint for generated files.
+      - linters:
+          - godoclint
+        path: _mock\.go
+      - linters:
+          - godoclint
+        path: _gen\.go
+
+      # Exclude some `goconst` messages.
+      - linters:
+          - goconst
+        path: (.+)_test\.go
 
 issues:
-  # List of regexps of issue texts to exclude, empty list by default.
-  # But independently of this option we use default exclude patterns,
-  # it can be disabled by `exclude-use-default: false`.
-  # To list all excluded by default patterns execute `golangci-lint run --help`.
-  # exclude:
-  #   - "has been deprecated since Go 1.16"
-
-  # Excluding configuration per-path, per-linter, per-text and per-source.
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - gocritic
-        - noctx
-        - unparam
-        - unused
-
-    - path: _test\.go
-      text: "weak random number generator"
-      linters:
-        - gosec
-
-  # Independently from option `exclude` we use default exclude patterns,
-  # it can be disabled by this option. To list all
-  # excluded by default patterns execute `golangci-lint run --help`.
-  # Default value for this option is true.
-  exclude-use-default: true
-
-  # Which dirs to skip: issues from them won't be reported.
-  # Can use regexp here: `generated.*`, regexp is applied on full path,
-  # including the path prefix if one is set.
-  # Default dirs are skipped independently of this option's value (see skip-dirs-use-default).
-  # "/" will be replaced by current OS file path separator to properly work on Windows.
-  # Default: []
-  # exclude-dirs:
-  #   - src/external_libs
-  #   - autogenerated_by_my_lib
-
-  # Enables exclude of directories:
-  # - vendor$, third_party$, testdata$, examples$, Godeps$, builtin$
-  # Default: true
-  exclude-dirs-use-default: false
-
-  # Which files to skip: they will be analyzed, but issues from them
-  # won't be reported. Default value is empty list, but there is
-  # no need to include all autogenerated files, we confidently recognize
-  # autogenerated files. If it's not please let us know.
-  # exclude-files:
-  #   - ".*\\.my\\.go$"
-  #   - lib/bad.go
-
-  # Maximum count of issues with the same text. Set to 0 to disable. Default is 3.
+  # Maximum count of issues with the same text.
+  # Set to 0 to disable.
+  # Default: 3.
   max-same-issues: 0
 
-  # Show only new issues: if there are unstaged changes or untracked files,
-  # only those changes are analyzed, else only changes in HEAD~ are analyzed.
-  # It's a super-useful option for integration of golangci-lint into existing
-  # large codebase. It's not practical to fix all existing issues at the moment
-  # of integration: much better don't allow issues in new code.
-  # Default is false.
-  new: false
-
   # Show only new issues created after git revision `REV`.
-  # new-from-rev: REV
+  # Default: "".
+  new-from-rev: ""
 
-  # Show only new issues created in git patch with set file path.
-  # new-from-patch: path/to/patch/file
+formatters:
+  # Enable specific formatter.
+  # Default: [] (uses standard Go formatting).
+  enable:
+    - gofumpt # enforces a stricter format than gofmt, while being backwards compatible.
+    - gci     # it is a superset for import grouping/formatting.
+    - golines # rewrites lines to the target width, lll only complains.
+
+  # Formatters settings.
+  settings:
+    gci:
+      # Section configuration to compare against.
+      # Section names are case-insensitive and may contain parameters in ().
+      # The default order of sections is `standard > default > custom > blank > dot > alias > localmodule`.
+      # If `custom-order` is `true`, it follows the order of `sections` option.
+      # Default: ["standard", "default"].
+      sections:
+        - standard
+        - default
+        - localmodule
+        - blank
+        - dot
+
+      # Enable custom order of sections.
+      # If `true`, make the section order the same as the order of `sections`.
+      # Default: false.
+      custom-order: true
+
+    golines:
+      # Target maximum line length.
+      # Default: 100
+      max-len: 140
+
+  exclusions:
+    # Which file paths to exclude.
+    # This option is ignored when using `--stdin` as the path is unknown.
+    # Default: [].
+    paths:
+      - ".*_mock\\.go$" # exclude auto-generated mocks.
+      - ".*_gen\\.go$"  # exclude auto-generated code.
