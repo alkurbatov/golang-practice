@@ -49,14 +49,5 @@
 :bangbang: Автор курса размещает ссылки только на узкоспециализированные
 технические материалы, свободные от политики.
 
-### Не могу скачать образы Docker
-
-В случае невозможности скачать образы `Docker` (например, в связи с блокировкой
-российских IP-адресов) необходимо использовать `VPN` или один из следующих
-`proxy`:
-
-- [timeweb.cloud](https://dockerhub.timeweb.cloud/)
-- [huecker](https://huecker.io/)
-
 [cc-by-nc]: https://creativecommons.org/licenses/by-nc/4.0/
 [cc-by-nc-shield]: https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg
