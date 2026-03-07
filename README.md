@@ -10,7 +10,7 @@
 Если вы только начинаете изучать `Go`, воспользуйтесь любым из курсов по
 основам языка, например [Основы Go](https://practicum.yandex.ru/go-basics/)
 от `Yandex` или [Знакомство с Golang](https://stepik.org/course/263524/promo)
-от Антона Жиянова, автора канала `Thank Go!`.
+от Антона Жиянова, автора канала [Thank Go!](https://t.me/thank_go).
 
 ## Задания
 
