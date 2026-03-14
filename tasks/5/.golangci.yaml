@@ -87,9 +87,7 @@ linters:
     - nonamedreturns # reports all named returns.
     - paralleltest # [too many false positives] detects missing usage of t.Parallel() method in your Go test.
     - sqlclosecheck # checks that sql.Rows, sql.Stmt, sqlx.NamedStmt, pgx.Query are closed.
-    - sloglint # ensure consistent code style when using log/slog.
     - testableexamples # checks if examples are testable (have an expected output).
-    - testpackage # makes you use a separate _test package.
     - varnamelen # [great idea, but too many false positives] checks that the length of a variable's name matches its scope.
     - wrapcheck # checks that errors returned from external packages are wrapped.
     - wsl # [too strict and mostly code is not more readable] whitespace linter forces you to use empty lines
