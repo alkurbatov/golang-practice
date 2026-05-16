@@ -197,6 +197,10 @@ linters:
       # Default: 3.
       min-occurrences: 2
 
+      # Ignore strings from test files.
+      # Default: false
+      ignore-tests: true
+
     gocritic:
       # Which checks should be disabled; can't be combined with 'enabled-checks'.
       # Default: [].
@@ -345,6 +349,7 @@ linters:
         - anon
         - empty
         - error
+        - generic
         - grpc.ServerOption
         - proto.Message
         - stdlib
@@ -471,11 +476,6 @@ linters:
       - linters:
           - godoclint
         path: _gen\.go
-
-      # Exclude some `goconst` messages.
-      - linters:
-          - goconst
-        path: (.+)_test\.go
 
 issues:
   # Maximum count of issues with the same text.
