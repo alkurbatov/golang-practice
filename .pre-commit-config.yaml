@@ -8,3 +8,4 @@ repos:
     rev: v0.15.0
     hooks:
       - id: markdownlint
+        args: ["--style", ".mdlstyle.rb"]
