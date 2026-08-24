@@ -74,6 +74,7 @@ linters:
     - dupl # tool for code clone detection.
     - exhaustive # checks exhaustiveness of enum switch statements.
     - exhaustruct # [highly recommend to enable] checks if all structure fields are initialized.
+    - exhaustruct_v5 # Checks if all structure fields are initialized.
     - forbidigo # forbids identifiers.
     - forcetypeassert # [replaced by errcheck] finds forced type assertions.
     - gochecknoglobals # checks that no global variables exist.
