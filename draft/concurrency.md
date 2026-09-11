@@ -67,7 +67,11 @@ func main() {
 
 ## Материалы для ознакомления
 
+- [Concurrency is not parallelism][waza-talk] — доклад Роба Пайка, в котором
+  он на примерах объясняет разницу между конкурентностью и параллелизмом.
+
 - [Оптимизация конкурентных приложений в Go][go-concurrency] —
   подробное описание подходов и паттернов конкурентного программирования.
 
+[waza-talk]: https://go.dev/blog/waza-talk
 [go-concurrency]: https://habr.com/ru/companies/vktech/articles/904046/
