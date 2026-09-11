@@ -5,7 +5,7 @@ repos:
       - id: end-of-file-fixer
 
   - repo: https://github.com/markdownlint/markdownlint
-    rev: v0.15.0
+    rev: v0.18.1
     hooks:
       - id: markdownlint
         args: ["--style", ".mdlstyle.rb"]
